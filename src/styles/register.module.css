@@ -1,0 +1,17 @@
+.formDiv {
+  margin-top: 100px;
+  padding-left: 20%;
+  padding-right: 20%;
+  padding-bottom: 10%;
+  /* display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; */
+}
+
+.loginButton {
+  background: none;
+  border: none;
+  text-decoration: underline;
+  color: blue;
+}
