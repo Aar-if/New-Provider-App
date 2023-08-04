@@ -9,7 +9,7 @@ import updateApi from "../api/updateApi";
 import Modal from "react-modal";
 import modalStyles from "../styles/modal.module.css";
 import { useForm } from "react-hook-form";
-const baseUrl = import.meta.env.VITE_BASE_URL;
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 const customStyles = {
   content: {

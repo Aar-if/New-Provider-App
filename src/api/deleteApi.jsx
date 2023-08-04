@@ -1,6 +1,6 @@
 import axios from "axios";
 import { create } from "../routes/links";
-const baseUrl = import.meta.env.VITE_BASE_URL;
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 const deleteApi = async (data) => {
   console.log(data);
