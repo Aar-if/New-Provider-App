@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  useMemo,
-  useCallback,
-} from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import axios from "axios";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
@@ -15,8 +9,25 @@ import updateApi from "../api/updateApi";
 import Modal from "react-modal";
 import modalStyles from "../styles/modal.module.css";
 import { useForm } from "react-hook-form";
+const baseUrl = import.meta.env.VITE_BASE_URL;
+
+const customStyles = {
+  content: {
+    maxHeight: "90%",
+    maxWidth: "90%",
+    margin: 0,
+    padding: "20",
+    backgroundColor: "#fff",
+  },
+  scrollableContent: {
+    maxHeight: "90%",
+    overflowY: "auto",
+  },
+};
 
 const MyCourses = () => {
+  const id = localStorage.getItem("userId");
+
   const gridRef = useRef();
   const [rowData, setRowData] = useState([]);
   const [searchText, setSearchText] = useState("");
@@ -24,16 +35,8 @@ const MyCourses = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   //States for EDIT modal values
-  const [editId, setEditId] = useState("");
-  const [editTitle, setEditTitle] = useState("");
-  const [editDescription, setEditDescription] = useState("");
-  const [editLanguage, setEditLanguage] = useState("");
-  const [editContentType, setEditContentType] = useState("");
-  const [editDomain, setEditDomain] = useState("");
-  const [editGoal, setEditGoal] = useState("");
-  const [editCompetency, setEditCompetency] = useState("");
-  const [editThemes, setEditTheme] = useState("");
-  const [editLink, setEditLink] = useState("");
+
+  const [formData, setFormData] = useState({});
 
   useEffect(() => {
     Modal.setAppElement("#root"); // Set the app element for modal
@@ -60,7 +63,6 @@ const MyCourses = () => {
         const label = "Remove"; // Replace with your desired label
         const handleClick = async () => {
           // Handle button click event here
-          console.log("Button clicked!", params.data);
           const data = params.data.id;
           const result = await deleteApi(data);
 
@@ -102,49 +104,31 @@ const MyCourses = () => {
         };
 
         const handleEdit = (params) => {
-          console.log(params.data.id);
-          setEditId(params.data.id);
-          console.log(params.data.attributes.title);
-          setEditTitle(params.data.attributes.title);
-
-          console.log(params.data.attributes.description);
-          setEditDescription(params.data.attributes.description);
-          console.log(params.data.attributes.language);
-          setEditLanguage(params.data.attributes.language);
-          console.log(params.data.attributes.contentType);
-          setEditContentType(params.data.attributes.contentType);
-          console.log(params.data.attributes.domain);
-          setEditDomain(params.data.attributes.domain);
-          console.log(params.data.attributes.goal);
-          setEditGoal(params.data.attributes.goal);
-          console.log(params.data.attributes.competency);
-          setEditCompetency(params.data.attributes.competency);
-          console.log(params.data.attributes.themes);
-          setEditTheme(params.data.attributes.themes);
-          console.log(params.data.attributes.link);
-          setEditLink(params.data.attributes.link);
+          setFormData(params?.data);
         };
-
-        console.log(editTitle);
-        console.log(editDescription);
-        console.log(editLanguage);
-        console.log(editContentType);
-        console.log(editDomain);
-        console.log(editGoal);
-        console.log(editCompetency);
-        console.log(editThemes);
-        console.log(editLink);
 
         const {
           register,
           handleSubmit,
           formState: { errors },
-        } = useForm({});
-
+        } = useForm({
+          defaultValues: {
+            code: formData?.attributes?.code,
+            competency: formData?.attributes?.competency,
+            contentType: formData?.attributes?.contentType,
+            description: formData?.attributes?.description,
+            domain: formData?.attributes?.domain,
+            goal: formData?.attributes?.goal,
+            language: formData?.attributes?.language,
+            link: formData?.attributes?.link,
+            sourceOrganisation: formData?.attributes?.sourceOrganisation,
+            themes: formData?.attributes?.themes,
+            title: formData?.attributes?.title,
+            user_id: formData?.attributes?.user_id,
+          },
+        });
         const onSubmit = async (data) => {
-          console.log(data);
-          console.log(editId);
-          const result = await updateApi(data, editId);
+          const result = await updateApi(data, formData?.id);
           if (result == true) {
             alert("Content updated");
             location.reload();
@@ -152,7 +136,6 @@ const MyCourses = () => {
             alert("Update failed");
           }
         };
-
         return (
           <>
             <div
@@ -170,7 +153,8 @@ const MyCourses = () => {
               isOpen={isOpen}
               onRequestClose={closeModal}
               contentLabel="Edit Modal"
-              className={modalStyles.modalDiv}
+              // className={modalStyles.modalDiv}
+              style={customStyles.content}
             >
               {/* <div>
                   <button
@@ -186,7 +170,7 @@ const MyCourses = () => {
                 autoComplete="off"
                 onSubmit={handleSubmit(onSubmit)}
               >
-                <div className="mb-3">
+                <div className="mb-3" style={customStyles.scrollableContent}>
                   <div className="container mb-3">
                     <div className="h4" style={{ color: "#0F75BC" }}>
                       To initiate edits, interact with the requisite fields and
@@ -199,11 +183,11 @@ const MyCourses = () => {
                         name="contentName"
                         id="contentName"
                         placeholder="Name of the content"
-                        {...register("contentName")}
+                        // value={formData?.attributes?.title}
+                        {...register("title")}
                       ></input>
                       <label className="form-label" htmlFor="contentName">
-                        {" "}
-                        {editTitle}
+                        Content Name
                       </label>
                     </div>
                   </div>
@@ -223,7 +207,9 @@ const MyCourses = () => {
                         id="language"
                         {...register("language")}
                       >
-                        <option value="">{editLanguage}</option>
+                        <option value="">
+                          {formData?.attributes?.language}
+                        </option>
                         <option value="English">English</option>
                         <option value="Hindi">Hindi</option>
                         <option value="Gujarati">Gujarati</option>
@@ -242,9 +228,9 @@ const MyCourses = () => {
                         className="form-select"
                         name="theme"
                         id="theme"
-                        {...register("theme")}
+                        {...register("themes")}
                       >
-                        <option value="">{editThemes}</option>
+                        <option value="">{formData?.attributes?.themes}</option>
                         <option value="Animals">Animals</option>
                         <option value="Birds">Birds</option>
                         <option value="Vegetables">Vegetables</option>
@@ -265,7 +251,9 @@ const MyCourses = () => {
                         id="contentType"
                         {...register("contentType")}
                       >
-                        <option value="">{editContentType}</option>
+                        <option value="">
+                          {formData?.attributes?.contentType}
+                        </option>
                         <option value="Video">Video</option>
                         <option value="Read Along">Read Along</option>
                         <option value="Read">Read</option>
@@ -288,11 +276,11 @@ const MyCourses = () => {
                         name="contentLink"
                         id="contentLink"
                         placeholder="Link to the content"
-                        {...register("contentLink")}
+                        {...register("link")}
                       ></input>
 
                       <label className="form-label" htmlFor="contentLink">
-                        {editLink}
+                        {formData?.attributes?.link}
                       </label>
                     </div>
                   </div>
@@ -303,13 +291,14 @@ const MyCourses = () => {
                         className="form-control"
                         name="contentDescription"
                         id="contentDescription"
+                        // value={formData?.attributes?.description}
                         {...register("description")}
                       ></textarea>
                       <label
                         className="form-label"
                         htmlFor="contentDescription"
                       >
-                        {editDescription}
+                        Description
                       </label>
                     </div>
                   </div>
@@ -327,9 +316,9 @@ const MyCourses = () => {
                         className="form-select"
                         name="contentDomain"
                         id="contentDomain"
-                        {...register("contentDomain")}
+                        {...register("domain")}
                       >
-                        <option value="">{editDomain}</option>
+                        <option value="">{formData?.attributes?.domain}</option>
                         <option value="Socio-Emotional and Ethical Development">
                           Socio-Emotional and Ethical Development
                         </option>
@@ -356,9 +345,9 @@ const MyCourses = () => {
                         className="form-select"
                         name="contentGoal"
                         id="contentGoal"
-                        {...register("contentGoal")}
+                        {...register("goal")}
                       >
-                        <option value="">{editGoal}</option>
+                        <option value="">{formData?.attributes?.goal}</option>
                         <option value="CG-2: Children develop sharpness in sensorial perceptions">
                           CG-2: Children develop sharpness in sensorial
                           perceptions
@@ -403,13 +392,15 @@ const MyCourses = () => {
                       <select
                         name="competencies"
                         id="competencies"
-                        {...register("compentencies")}
+                        {...register("competency")}
                         style={{
                           border: "2px solid rgb(185, 185, 185)",
                           height: "40px",
                         }}
                       >
-                        <option value="">{editCompetency}</option>
+                        <option value="">
+                          {formData?.attributes?.competency}
+                        </option>
                         <option value="C-2.2: Develops visual memory for symbols and representations">
                           C-2.2: Develops visual memory for symbols and
                           representations
@@ -548,16 +539,18 @@ const MyCourses = () => {
   useEffect(() => {
     axios({
       method: "get",
-      url: "http://localhost:1337/api/fln-contents",
+      url: `${baseUrl}/fln-contents?filters[user_id][$eq]=${id}`,
       responseType: "stream",
-    }).then(function (response) {
-      console.log(response.data);
-      const obj = JSON.parse(response.data);
-      console.log(obj.data);
+    })
+      .then(function (response) {
+        const obj = JSON.parse(response.data);
 
-      const parsedData = obj.data;
-      setRowData(parsedData);
-    });
+        const parsedData = obj.data;
+        setRowData(parsedData);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, []);
 
   const handleSearch = () => {

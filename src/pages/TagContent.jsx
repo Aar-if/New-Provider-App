@@ -2,7 +2,7 @@ import styles from "../styles/tagContent.module.css";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import RegisterSchema from "../schema/RegisterSchema";
-import uploadApi from "../api/uploadapi";
+import uploadApi from "../api/uploadApi";
 import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import axios from "axios";
@@ -41,7 +41,8 @@ const TagContent = () => {
 
   const onSubmit = async (data) => {
     console.log(data);
-    const result = await uploadApi(data);
+    const id = localStorage.getItem("userId");
+    const result = await uploadApi(data, id);
 
     if (result == true) {
       setSuccess(true);

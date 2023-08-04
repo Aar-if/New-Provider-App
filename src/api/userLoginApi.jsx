@@ -1,5 +1,6 @@
 import axios from "axios";
 import { create } from "../routes/links";
+const baseUrl = import.meta.env.VITE_BASE_URL;
 
 const userLoginApi = async (data) => {
   console.log(data);
@@ -7,12 +8,9 @@ const userLoginApi = async (data) => {
   const identifier = data.userEmail;
   const password = data.password;
 
-  console.log(identifier);
-  console.log(password);
-
   let result;
   await axios
-    .post("http://localhost:1337/api/auth/local/", {
+    .post(`${baseUrl}/auth/local`, {
       identifier: identifier,
       password: password,
     })
@@ -22,7 +20,7 @@ const userLoginApi = async (data) => {
       console.log(res.data.jwt);
 
       localStorage.setItem("loginJwt", res.data.jwt);
-
+      localStorage.setItem("userId", res?.data?.user?.id);
       if (res.status === 200) {
         result = true;
       } else if (res.status === 400) {

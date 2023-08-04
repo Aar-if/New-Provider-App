@@ -1,22 +1,21 @@
 import axios from "axios";
 import { create } from "../routes/links";
+const baseUrl = import.meta.env.VITE_BASE_URL;
 
 const updateApi = async (data, id) => {
-  console.log("INSIDE UPDATE API");
-
-  const title = data.contentName;
+  const title = data.title;
   const language = data.language;
-  const theme = data.theme;
+  const theme = data.themes;
   const contentType = data.contentType;
-  const contentLink = data.contentLink;
+  const contentLink = data.link;
   const description = data.description;
-  const competency = data.compentencies;
-  const domain = data.contentDomain;
-  const goal = data.contentGoal;
+  const competency = data.competency;
+  const domain = data.domain;
+  const goal = data.goal;
 
   let result;
   await axios
-    .put("http://localhost:1337/api/fln-contents/" + id, {
+    .put(`${baseUrl}/fln-contents/` + id, {
       data: {
         title: title,
         description: description,
@@ -30,9 +29,6 @@ const updateApi = async (data, id) => {
       },
     })
     .then((res) => {
-      console.log(res);
-      console.log(res.data);
-
       if (res.status === 200) {
         result = true;
       } else {
@@ -40,7 +36,7 @@ const updateApi = async (data, id) => {
       }
     })
     .catch(function (error) {
-      console.log(error.response.data.error);
+      console.log(error?.response);
       let err = 0;
       return err;
     });

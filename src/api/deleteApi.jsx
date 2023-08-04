@@ -1,5 +1,6 @@
 import axios from "axios";
 import { create } from "../routes/links";
+const baseUrl = import.meta.env.VITE_BASE_URL;
 
 const deleteApi = async (data) => {
   console.log(data);
@@ -8,7 +9,7 @@ const deleteApi = async (data) => {
 
   let result;
   await axios
-    .delete("http://localhost:1337/api/fln-contents/" + id, {
+    .delete(`${baseUrl}/fln-contents/` + id, {
       data: {
         id: id,
       },
