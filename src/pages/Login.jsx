@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import headerStyles from "../components/header.module.css";
 import styles from "../styles/register.module.css";
 import imagePath from "../assets/tekdi-logo-black.png";
@@ -10,6 +10,16 @@ import { Navigate, useNavigate } from "react-router-dom";
 
 function Login() {
   const navigate = useNavigate();
+  const login = () => {
+    localStorage.setItem("login", true);
+    navigate("/");
+  };
+  useEffect(() => {
+    let login = localStorage.getItem("token");
+    if (login) {
+      navigate("/");
+    }
+  }, []);
   const {
     register,
     handleSubmit,
@@ -99,7 +109,9 @@ function Login() {
 
           <div className="container mb-3">
             <div style={{ marginTop: "25px" }}>
-              <button className="btn btn-primary">Login</button>
+              <button className="btn btn-primary" onClick={login}>
+                Login
+              </button>
             </div>
             {/* <div>
               <button className={styles.loginButton}>Register</button> your

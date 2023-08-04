@@ -22,6 +22,7 @@ function Header() {
   };
   const loggedout = () => {
     navigate("/");
+    localStorage.clear();
   };
   return (
     <React.Fragment>
