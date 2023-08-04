@@ -131,7 +131,8 @@ const MyCourses = () => {
           const result = await updateApi(data, formData?.id);
           if (result == true) {
             alert("Content updated");
-            location.reload();
+            getMyCourses();
+            setIsOpen(false);
           } else {
             alert("Update failed");
           }
@@ -536,7 +537,7 @@ const MyCourses = () => {
     []
   );
 
-  useEffect(() => {
+  const getMyCourses = () => {
     axios({
       method: "get",
       url: `${baseUrl}/fln-contents?filters[user_id][$eq]=${id}`,
@@ -551,6 +552,10 @@ const MyCourses = () => {
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  useEffect(() => {
+    getMyCourses();
   }, []);
 
   const handleSearch = () => {
