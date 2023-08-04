@@ -1,6 +1,6 @@
 import axios from "axios";
 import { create } from "../routes/links";
-const baseUrl = import.meta.env.VITE_BASE_URL;
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 const uploadApi = async (data, id) => {
   console.log("Data in upload API");
