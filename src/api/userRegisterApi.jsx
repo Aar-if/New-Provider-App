@@ -1,5 +1,6 @@
 import axios from "axios";
 import { create } from "../routes/links";
+const baseUrl = import.meta.env.VITE_BASE_URL;
 
 const userRegisterApi = async (data) => {
   console.log(data);
@@ -16,7 +17,7 @@ const userRegisterApi = async (data) => {
   let result;
   await axios
     .post(
-      "http://localhost:1337/api/auth/local/register/",
+      `${baseUrl}/auth/local/register/`,
 
       {
         username: username,

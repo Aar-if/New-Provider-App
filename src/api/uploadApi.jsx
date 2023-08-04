@@ -1,9 +1,10 @@
 import axios from "axios";
 import { create } from "../routes/links";
+const baseUrl = import.meta.env.VITE_BASE_URL;
 
-const uploadApi = async (data) => {
+const uploadApi = async (data, id) => {
   console.log("Data in upload API");
-  console.log(data);
+  console.log(data, "data", id);
 
   const title = data.contentName;
   const language = data.language;
@@ -17,7 +18,7 @@ const uploadApi = async (data) => {
 
   let result = true;
   await axios
-    .post("http://localhost:1337/api/fln-contents", {
+    .post(`${baseUrl}/fln-contents`, {
       data: {
         title: title,
         description: description,
@@ -28,6 +29,8 @@ const uploadApi = async (data) => {
         goal: goal,
         competency: competency,
         themes: theme,
+        sourceOrganisation: "Tekdi",
+        user_id: id,
       },
     })
     .then((res) => {

@@ -4,7 +4,7 @@ import styles from "../styles/register.module.css";
 import imagePath from "../assets/tekdi-logo-black.png";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import userRegisterApi from "../api/userRegisterapi";
+import userRegisterApi from "../api/userRegisterApi";
 import UserRegisterSchema from "../schema/UserRegisterSchema";
 import { Navigate, useNavigate } from "react-router-dom";
 
